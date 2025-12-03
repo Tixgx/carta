@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Sobre clásico (papel suave)</title>
+
+<style>
+:root{
+  --fondo:#e0e0e0;
+  --azul:#2e63d9;
+  --azul-borde:#12376f;
+  --azul-tapa:#254fb0;
+
+  /* Valores dinámicos responsivos */
+  --canvas-w: min(90vw, 520px);
+  --canvas-h: calc(var(--canvas-w) * 0.78);
+  --pocket-h: calc(var(--canvas-h) * 0.48);
+  --flap-h: calc(var(--canvas-h) * 0.26);
+
+  --start-scale: 0.15;
+  --end-scale: 1;
+
+  --transition-fast: .48s cubic-bezier(.22,.78,.32,1);
+}
+
+/* GLOBAL */
+*{margin:0; padding:0; box-sizing:border-box;}
+body{
+  min-height:100vh;
+  background:var(--fondo);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family: "Segoe UI", Roboto, Arial;
+}
+
+.wrap{
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:20px;
+}
+
+.canvas{
+  width:var(--canvas-w);
+  height:var(--canvas-h);
+  position:relative;
+  perspective:1200px;
+}
+
+/* SOBRE */
+.sobre{
+  position:absolute;
+  width:100%;
+  height:var(--pocket-h);
+  left:0;
+  top: calc((var(--canvas-h) - var(--pocket-h))/2 + 8px);
+
+  background:var(--azul);
+  border:3px solid var(--azul-borde);
+  border-top:none;
+  border-radius:0 0 12px 12px;
+
+  background-image:url('https://www.transparenttextures.com/patterns/arab_tile.png');
+  background-size:200px;
+  overflow:hidden;
+  z-index:3;
+  transition:.4s ease;
+}
+
+/* TAPA */
+.tapa{
+  position:absolute;
+  left:0;
+  top: calc((var(--canvas-h) - var(--pocket-h))/2 + 8px);
+  width:0;
+  height:0;
+
+  border-left: calc(var(--canvas-w)/2) solid transparent;
+  border-right: calc(var(--canvas-w)/2) solid transparent;
+  border-top: var(--flap-h) solid var(--azul-tapa);
+
+  transform-origin: top;
+  transition: transform var(--transition-fast), opacity .3s;
+  z-index:6;
+}
+
+/* CARTA RESPONSIVA CENTRADA */
+.carta{
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%, -50%) scale(var(--start-scale));
+  transform-origin:center;
+
+  width:90%;
+  max-width:550px;
+  min-height:500px;
+
+  background:#fff;
+  border-radius:14px;
+  padding:20px;
+  box-shadow:0 8px 20px rgba(0,0,0,0.2);
+  z-index:2;
+}
+
+.carta h2{
+  text-align:center;
+  font-size:clamp(18px, 5vw, 24px);
+}
+
+.carta p{
+  font-size:clamp(14px, 3.5vw, 16px);
+  line-height:1.45;
+  white-space:pre-wrap;
+}
+
+.carta img{
+  width:50%;
+  max-width:180px;
+  display:block;
+  margin:14px auto;
+  border-radius:12px;
+}
+
+/* SLIDER */
+.controls{
+  width:100%;
+  max-width:var(--canvas-w);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:10px;
+}
+
+.controls.oculto{
+  opacity:0;
+  pointer-events:none;
+}
+
+input[type=range]{
+  width:90%;
+  appearance:none;
+  height:12px;
+  background:transparent;
+}
+
+input[type=range]::-webkit-slider-runnable-track{
+  height:12px;
+  border-radius:999px;
+  background:linear-gradient(90deg,#dcdcdc,#a0a0a0);
+}
+
+input[type=range]::-webkit-slider-thumb{
+  appearance:none;
+  width:44px;
+  height:44px;
+  margin-top:-16px;
+  background:#ff3c3c;
+  clip-path: polygon(
+    50% 7%,64% 20%,76% 20%,88% 32%,88% 46%,
+    74% 62%,50% 83%,26% 62%,12% 46%,12% 32%,
+    24% 20%,36% 20%
+  );
+  border:none;
+}
+
+.hint{
+  font-size:14px;
+  text-align:center;
+}
+
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+<div class="canvas" id="canvas">
+
+  <div class="tapa" id="tapa"></div>
+  <div class="sobre" id="sobre"></div>
+
+  <div class="carta" id="carta">
+    <h2>Para Majo</h2>
+    <p>
+Hola Majo, un pequeño pajarito me contó que amabas las cartas. Que te parece te enviaron una, quería tener un detalle contigo, anoche, quedé demasiado desubicado y el que no me quieras hablar para poder entendernos del todo es un poco pesado pero la verdad sé muy bien que yo fui el del error pero aun con todo y eso me sinceré contigo. Solo somos una vez en la vida y quizá poder disfrutar de la mera compañía del otro pueda ser lo que necesitemos. Quiero que te lleves un lindo recuerdo esta navidad. Espero puedas romper esa barrera y logremos hablar. Me caes super bien y ayer, aunque raro, se sintió un buen rato y te senti muy feliz y comoda, me gusto sacarte una sonrisa att: Tiago
+<img src="img/Majo.jpg">
+    </p>
+    
+  </div>
+
+</div>
+
+<div class="controls">
+  <input id="slider" type="range" min="0" max="100" value="0">
+  <div class="hint">Arrastra el corazón para abrir el sobre</div>
+</div>
+
+</div>
+
+<script>
+const slider = document.getElementById("slider");
+const carta = document.getElementById("carta");
+const tapa = document.getElementById("tapa");
+const sobre = document.getElementById("sobre");
+
+slider.oninput = () => {
+  let v = slider.value / 100;
+
+  tapa.style.transform = `rotateX(${170 * v}deg)`;
+  carta.style.transform = `translate(-50%, -50%) scale(${0.15 + v * 0.85})`;
+
+  if(v >= 0.98){
+    tapa.style.opacity = "0";
+    sobre.style.opacity = "0";
+  } else {
+    tapa.style.opacity = "1";
+    sobre.style.opacity = String(1 - v * 1.1);
+  }
+};
+</script>
+
+</body>
+</html>
